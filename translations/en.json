@@ -1,0 +1,12 @@
+{
+  "CMD_GLANCENAMES_DESCRIPTION" : "List of all available glancable names.",
+  "CMD_GLANCE_DESCRIPTION" : "Glance specific module(s) for a while. See `/glancenames` also.\ne.g)`/glance clock`.",
+  "CMD_GLANCEOFF_DESCRIPTION" : "Turn off glancing mode and back to previous.",
+  "CMD_ASSTNT_GLANCEABLENAMES" : "list of glanceable names",
+  "CMD_ASSTNT_GLANCE" : "glance at :name",
+  "CMD_ASSTNT_GLANCE_DESCRIPTION" : "Glance specific modules for a while.",
+  "CMD_ASSTNT_GLANCEOFF" : "glance mode off",
+  "CMD_GLANCE_SUCCESS" : "Yes, It will be done.",
+  "CMD_GLANCE_IMPOSSIBLE" : "I cannot find module {name} for glancing now.",
+  "CMD_GLANCE_NO_ARGS" : "Alias or name of module is required."
+}

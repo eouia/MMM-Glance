@@ -18,6 +18,7 @@ Module.register("MMM-Glance", {
   start: function() {
     this.status = {}
     this.alias = {}
+    this.glancing = false
     this.timer = null
     this.defaultAlias = {
       "news" : "newsfeed",
@@ -28,30 +29,71 @@ Module.register("MMM-Glance", {
     }
   },
 
+  getTranslations: function() {
+    return {
+      en: "translations/en.json",
+    }
+  },
+
   getCommands: function(register) {
     if (register.constructor.name == 'TelegramBotCommandRegister') {
       register.add({
-        command: "glancenames",
-        description: "List of all available glancable names.",
+        command: "glanceables",
+        description: this.translate("CMD_GLANCENAMES_DESCRIPTION"),
         callback: "cmd_glancenames"
       })
       register.add({
         command: "glance",
-        description: "glance specific module(s) for a while.\n`/glance NAME` or `/glance NAME SECONDS`\ne.g)`/glance clock 5`",
-        args_pattern: ["(.*)(?:\s([0-9]+))?"],
-        callback: "cmd_glance"
+        description: this.translate("CMD_GLANCE_DESCRIPTION"),
+        args_pattern: [/.*/],
+        args_mapping: ["name"],
+        callback: "cmd_glanceon"
+      })
+      register.add({
+        command: "glanceoff",
+        description: this.translate("CMD_GLANCEOFF_DESCRIPTION"),
+        callback: "cmd_glanceoff"
+      })
+    }
+    if (register.constructor.name == 'AssistantCommandRegister') {
+      register.add({
+        command: this.translate("CMD_ASSTNT_GLANCEABLENAMES"),
+        description: this.translate("CMD_GLANCENAMES_DESCRIPTION"),
+        callback: "cmd_glancenames"
+      })
+      register.add({
+        //command: "glance :name",
+        command: this.translate("CMD_ASSTNT_GLANCE"),
+        description: this.translate("CMD_ASSTNT_GLANCE_DESCRIPTION"),
+        callback: "cmd_glanceon"
+      })
+      register.add({
+        command: this.translate("CMD_ASSTNT_GLANCEOFF"),
+        description: this.translate("CMD_GLANCEOFF_DESCRIPTION"),
+        callback: "cmd_glanceoff"
       })
     }
   },
 
-  cmd_glance: function(handler) {
-    console.log("here???")
-    if (handler.constructor.name == 'TelegramBotMessageHandler') {
-      console.log(handler.args)
+  cmd_glanceon: function(command, handler) {
+    if (handler.args) {
+      var ret = this.glanceOn(handler.args.name)
+      if (ret) {
+        handler.reply("TEXT", this.translate("CMD_GLANCE_SUCCESS"))
+      } else {
+        handler.reply("TEXT", this.translate("CMD_GLANCE_IMPOSSIBLE"), handler.args.name)
+      }
+    } else {
+      handler.reply("TEXT", this.translate("CMD_GLANCE_NO_ARGS"))
     }
+
+  },
+  cmd_glanceoff: function(command, handler) {
+    this.glanceOff()
+    handler.reply("TEXT", this.translate("CMD_GLANCE_SUCCESS"))
   },
 
-  cmd_glancenames: function(handler) {
+  cmd_glancenames: function(command, handler) {
     var text=""
     text = Object.keys(this.alias).join()
     handler.reply("TEXT", text)
@@ -60,8 +102,10 @@ Module.register("MMM-Glance", {
   initialize: function() {
     var self = this
     MM.getModules().enumerate(function(m) {
-      self.alias[m.name] = m.name
-    })
+      if(m.data.position) {
+        self.alias[m.name] = m.name
+      }
+      })
     this.alias = Object.assign({}, this.alias, this.defaultAlias, this.config.alias)
     console.log(this.alias)
   },
@@ -69,6 +113,10 @@ Module.register("MMM-Glance", {
   glanceOn : function (call, time) {
     var filter = []
     var self = this
+
+    if (!time) {
+      time = this.config.defaultGlancingTime
+    }
     if (Object.keys(this.alias).indexOf(call) >= 0) {
       var modules = this.alias[call]
       if (Array.isArray(modules)) {
@@ -76,37 +124,56 @@ Module.register("MMM-Glance", {
       } else {
         filter.push(modules)
       }
+    } else {
+      return false
     }
 
-
-    if (Object.keys(self.status).length == 0) {
+    if (!this.glancing) {
       MM.getModules().enumerate(function(m) {
+        console.log(m.name, m.data.position)
         if (m.data.position) {
           self.status[m.name] = m.hidden
         }
       })
     }
-    console.log('status', self.status)
     MM.getModules().enumerate(function(m) {
-      if (Object.values(filter).indexOf(m.name) >= 0) {
-        m.show(0)
-      } else {
-        m.hide(0)
+      if(Object.values(filter).indexOf(m.name) >= 0) {
+        matched = 1
       }
     })
-    this.sendNotification('GLANCE_STARTED', {modules:filter, time:time})
-    this.timer = setTimeout(function(){
-      self.glanceOff()
-    }, time)
+
+
+    if (matched == 0) {
+      return false
+    } else {
+      clearTimeout(this.timer)
+      this.timer = null
+      MM.getModules().enumerate(function(m) {
+        if (Object.values(filter).indexOf(m.name) >= 0) {
+          m.show(0)
+        } else {
+          m.hide(0)
+        }
+      })
+      this.glancing = true
+      this.sendNotification('GLANCE_STARTED', {modules:filter, time:time})
+      this.timer = setTimeout(function(){
+        self.glanceOff()
+      }, time)
+      return true
+    }
+    console.log("here???")
   },
 
   glanceOff: function() {
+    this.glancing = false
     if (this.timer) {
       clearTimeout(this.timer)
       this.timer = null
       var self = this
       MM.getModules().enumerate(function(m) {
         if (typeof self.status[m.name] !== 'undefined') {
+          console.log(m.name, self.status[m.name])
           if (self.status[m.name]) {
             m.hide(0)
           } else {
@@ -115,8 +182,12 @@ Module.register("MMM-Glance", {
         }
       })
       this.status = {}
+
       this.sendNotification('GLANCE_ENDED')
+      return true
     }
+    return false
+
   },
 
   notificationReceived: function(notification, payload, sender) {
