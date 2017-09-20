@@ -54,7 +54,7 @@ Module.register("MMM-Glance", {
     var text=""
     text = Object.keys(this.alias).join()
     handler.reply("TEXT", text)
-  }
+  },
 
   initialize: function() {
     var self = this
