@@ -53,7 +53,7 @@ this.sendNotification("GLANCE_OFF")
 ### with `MMM-TelegramBot`
 |command | description
 |--- |---
-|`/glance party mode`| reveal some module(s). alias for module name is available.
+|`/glance` name| reveal some module(s). alias for module name is available.
 |`/glanceoff` | back to previous screen.
 |`/glanceables` | list of glanceable modules and aliases.
 
