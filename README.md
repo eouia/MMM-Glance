@@ -47,7 +47,7 @@ this.sendNotification("GLANCE_OFF")
 ```
 |notification |payload |description
 |--- |--- |---
-|GLANCE_ON | {name: "<module name>", time:<milliseconds>} | reveal some module(s). alias for module name is available.
+|GLANCE_ON | {name: "`<module name>`", time:`<milliseconds>`} | reveal some module(s). alias for module name is available.
 |GLANCE_OFF | | back to previous screen.
 
 ### with `MMM-TelegramBot`
