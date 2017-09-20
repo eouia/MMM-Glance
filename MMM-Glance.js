@@ -107,7 +107,6 @@ Module.register("MMM-Glance", {
       }
       })
     this.alias = Object.assign({}, this.alias, this.defaultAlias, this.config.alias)
-    console.log(this.alias)
   },
 
   glanceOn : function (call, time) {
@@ -130,7 +129,6 @@ Module.register("MMM-Glance", {
 
     if (!this.glancing) {
       MM.getModules().enumerate(function(m) {
-        console.log(m.name, m.data.position)
         if (m.data.position) {
           self.status[m.name] = m.hidden
         }
@@ -162,7 +160,6 @@ Module.register("MMM-Glance", {
       }, time)
       return true
     }
-    console.log("here???")
   },
 
   glanceOff: function() {
@@ -173,7 +170,6 @@ Module.register("MMM-Glance", {
       var self = this
       MM.getModules().enumerate(function(m) {
         if (typeof self.status[m.name] !== 'undefined') {
-          console.log(m.name, self.status[m.name])
           if (self.status[m.name]) {
             m.hide(0)
           } else {
