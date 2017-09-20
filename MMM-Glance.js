@@ -31,6 +31,11 @@ Module.register("MMM-Glance", {
   getCommands: function(register) {
     if (register.constructor.name == 'TelegramBotCommandRegister') {
       register.add({
+        command: "glancenames",
+        description: "List of all available glancable names.",
+        callback: "cmd_glancelist"
+      })
+      register.add({
         command: "glance",
         description: "glance specific module(s) for a while.\n`/glance NAME` or `/glance NAME SECONDS`\ne.g)`/glance clock 5`",
         args_pattern: ["(.*)(?:\s([0-9]+))?"]
@@ -43,6 +48,12 @@ Module.register("MMM-Glance", {
     if (handler.constructor.name == 'TelegramBotMessageHandler') {
       console.log(handler.args)
     }
+  },
+
+  cmd_glancenames: function(handler) {
+    var text=""
+    text = Object.keys(this.alias).join()
+    handler.reply("TEXT", text)
   }
 
   initialize: function() {
