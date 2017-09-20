@@ -53,7 +53,7 @@ this.sendNotification("GLANCE_OFF")
 ### with `MMM-TelegramBot`
 |command | description
 |--- |---
-|`/glance` name| reveal some module(s). alias for module name is available.
+|`/glance <name>`| reveal some module(s). alias for module name is available.
 |`/glanceoff` | back to previous screen.
 |`/glanceables` | list of glanceable modules and aliases.
 
@@ -61,7 +61,7 @@ this.sendNotification("GLANCE_OFF")
 ### with `MMM-Assistant`
 |command | description
 |--- |---
-|`glance at :name`| reveal some module(s). alias for module name is available.
+|`glance at <:name>`| reveal some module(s). alias for module name is available.
 |`glance mode off` | back to previous screen.
 |`list of glance` | list of glanceable modules and aliases.
 
