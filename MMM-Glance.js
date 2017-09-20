@@ -38,7 +38,7 @@ Module.register("MMM-Glance", {
       register.add({
         command: "glance",
         description: "glance specific module(s) for a while.\n`/glance NAME` or `/glance NAME SECONDS`\ne.g)`/glance clock 5`",
-        args_pattern: ["(.*)(?:\s([0-9]+))?"]
+        args_pattern: ["(.*)(?:\s([0-9]+))?"],
         callback: "cmd_glance"
       })
     }
