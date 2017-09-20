@@ -33,7 +33,7 @@ Module.register("MMM-Glance", {
       register.add({
         command: "glancenames",
         description: "List of all available glancable names.",
-        callback: "cmd_glancelist"
+        callback: "cmd_glancenames"
       })
       register.add({
         command: "glance",
@@ -45,6 +45,7 @@ Module.register("MMM-Glance", {
   },
 
   cmd_glance: function(handler) {
+    console.log("here???")
     if (handler.constructor.name == 'TelegramBotMessageHandler') {
       console.log(handler.args)
     }
