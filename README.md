@@ -42,7 +42,7 @@ You can use more detailed configuration like these; See the below section.
 ## How to use
 ### with Notification
 ```javascript
-this.sendNotification("GLANCE_ON", {name:"helloworld", time:10000)
+this.sendNotification("GLANCE_ON", {name:"helloworld", time:10000})
 this.sendNotification("GLANCE_OFF")
 ```
 |notification |payload |description
