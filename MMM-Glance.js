@@ -195,7 +195,7 @@ Module.register("MMM-Glance", {
         this.glanceOn(payload.name, payload.time)
         break
       case 'GLANCE_OFF':
-        this.glaceOff()
+        this.glanceOff()
         break
     }
   },
